@@ -5,159 +5,107 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Style Editor</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', sans-serif; background: #0c0c18; color: #e0e0e0; min-height: 100vh; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Segoe UI',sans-serif; background:#0c0c18; color:#e0e0e0; min-height:100vh; }
 
     header {
-      background: #12122a;
-      padding: 16px 28px;
-      border-bottom: 1px solid #2a2a4a;
-      display: flex; align-items: center; justify-content: space-between;
+      background:#12122a; padding:16px 28px;
+      border-bottom:1px solid #2a2a4a;
+      display:flex; align-items:center; justify-content:space-between;
     }
     header h1 {
-      font-size: 1.3rem;
-      background: linear-gradient(90deg, #a78bfa, #60a5fa);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      font-weight: 700;
+      font-size:1.3rem;
+      background:linear-gradient(90deg,#a78bfa,#60a5fa);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-weight:700;
     }
-    .style-badge {
-      font-size: .72rem; background: #2a1f5a;
-      border: 1px solid #a78bfa55; color: #a78bfa;
-      padding: 4px 12px; border-radius: 20px;
-    }
+    .badge { font-size:.72rem; background:#2a1f5a; border:1px solid #a78bfa55; color:#a78bfa; padding:4px 12px; border-radius:20px; }
 
-    .app { display: flex; height: calc(100vh - 57px); }
+    .app { display:flex; height:calc(100vh - 57px); }
 
     .sidebar {
-      width: 270px; min-width: 270px;
-      background: #12122a; border-right: 1px solid #2a2a4a;
-      overflow-y: auto; padding: 18px 16px;
-      display: flex; flex-direction: column; gap: 22px;
+      width:270px; min-width:270px; background:#12122a; border-right:1px solid #2a2a4a;
+      overflow-y:auto; padding:18px 16px; display:flex; flex-direction:column; gap:20px;
     }
-    .section-title {
-      font-size: .68rem; text-transform: uppercase;
-      letter-spacing: 1.5px; color: #6060a0; margin-bottom: 10px;
-    }
+    .section-title { font-size:.68rem; text-transform:uppercase; letter-spacing:1.5px; color:#6060a0; margin-bottom:8px; }
 
     .upload-zone {
-      border: 2px dashed #3a3a6a; border-radius: 12px;
-      padding: 22px 14px; text-align: center;
-      cursor: pointer; transition: .2s; background: #1a1a3a;
+      border:2px dashed #3a3a6a; border-radius:12px; padding:22px 14px;
+      text-align:center; cursor:pointer; transition:.2s; background:#1a1a3a;
     }
-    .upload-zone:hover, .upload-zone.drag-over { border-color: #a78bfa; background: #1f1f45; }
-    .upload-zone .icon { font-size: 1.8rem; }
-    .upload-zone p { font-size: .8rem; color: #8080b0; margin-top: 6px; line-height: 1.5; }
-    #fileInput { display: none; }
+    .upload-zone:hover,.upload-zone.drag-over { border-color:#a78bfa; background:#1f1f45; }
+    .upload-zone .icon { font-size:1.8rem; }
+    .upload-zone p { font-size:.8rem; color:#8080b0; margin-top:6px; line-height:1.5; }
+    #fileInput { display:none; }
 
-    .style-card {
-      background: linear-gradient(135deg, #1a1a3a, #1e1430);
-      border: 1px solid #a78bfa33; border-radius: 12px; padding: 14px;
-    }
-    .style-card-title { font-size: .78rem; color: #a78bfa; font-weight: 600; margin-bottom: 10px; }
-    .style-params { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-    .param-item { display: flex; flex-direction: column; gap: 2px; }
-    .param-name { font-size: .67rem; color: #7070a0; }
-    .param-val { font-size: .82rem; font-weight: 700; color: #c0b0ff; }
-    .param-val.neg { color: #f472b6; }
-    .param-val.pos { color: #34d399; }
+    .style-card { background:linear-gradient(135deg,#1a1a3a,#1e1430); border:1px solid #a78bfa33; border-radius:12px; padding:14px; }
+    .style-card-title { font-size:.78rem; color:#a78bfa; font-weight:600; margin-bottom:10px; }
+    .style-params { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+    .param-item { display:flex; flex-direction:column; gap:2px; }
+    .param-name { font-size:.67rem; color:#7070a0; }
+    .param-val { font-size:.82rem; font-weight:700; color:#c0b0ff; }
+    .param-val.neg { color:#f472b6; }
+    .param-val.pos { color:#34d399; }
+    .apply-btn { width:100%; padding:10px; border-radius:9px; border:1px solid #a78bfa55; background:#2a1f5a; color:#a78bfa; font-size:.82rem; font-weight:600; cursor:pointer; transition:.2s; margin-top:8px; }
+    .apply-btn:hover { background:#3a2a7a; }
 
-    .apply-btn {
-      width: 100%; padding: 10px; border-radius: 9px;
-      border: 1px solid #a78bfa55; background: #2a1f5a;
-      color: #a78bfa; font-size: .82rem; font-weight: 600;
-      cursor: pointer; transition: .2s; margin-top: 8px;
-    }
-    .apply-btn:hover { background: #3a2a7a; }
+    .btn-row { display:flex; gap:8px; margin-bottom:8px; }
+    .btn { flex:1; padding:9px 6px; border-radius:8px; border:none; cursor:pointer; font-size:.78rem; font-weight:600; transition:.2s; }
+    .btn-secondary { background:#1e1e3a; color:#c0c0e0; border:1px solid #2a2a4a; }
+    .btn-secondary:hover { background:#2a2a4a; }
+    .btn-primary { background:linear-gradient(135deg,#a78bfa,#60a5fa); color:#fff; }
+    .btn-primary:hover { opacity:.85; }
+    .btn-danger { background:#2a1020; color:#f87171; border:1px solid #3a1030; }
+    .btn-danger:hover { background:#3a1a30; }
 
-    .btn-row { display: flex; gap: 8px; margin-bottom: 8px; }
-    .btn {
-      flex: 1; padding: 9px 6px; border-radius: 8px; border: none;
-      cursor: pointer; font-size: .78rem; font-weight: 600; transition: .2s;
-    }
-    .btn-secondary { background: #1e1e3a; color: #c0c0e0; border: 1px solid #2a2a4a; }
-    .btn-secondary:hover { background: #2a2a4a; }
-    .btn-primary { background: linear-gradient(135deg, #a78bfa, #60a5fa); color: #fff; }
-    .btn-primary:hover { opacity: .85; }
-    .btn-danger { background: #2a1020; color: #f87171; border: 1px solid #3a1030; }
-    .btn-danger:hover { background: #3a1a30; }
+    .slider-group { display:flex; flex-direction:column; gap:11px; }
+    .slider-row { display:flex; flex-direction:column; gap:4px; }
+    .slider-label { display:flex; justify-content:space-between; font-size:.77rem; color:#a0a0c0; }
+    .slider-label span { color:#a78bfa; font-weight:600; font-size:.75rem; }
+    input[type=range] { -webkit-appearance:none; width:100%; height:3px; border-radius:3px; background:#2a2a4a; outline:none; cursor:pointer; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:14px; height:14px; border-radius:50%; background:#a78bfa; cursor:pointer; box-shadow:0 0 5px #a78bfa77; }
 
-    .slider-group { display: flex; flex-direction: column; gap: 11px; }
-    .slider-row { display: flex; flex-direction: column; gap: 4px; }
-    .slider-label { display: flex; justify-content: space-between; font-size: .77rem; color: #a0a0c0; }
-    .slider-label span { color: #a78bfa; font-weight: 600; font-size: .75rem; }
-    input[type=range] {
-      -webkit-appearance: none; width: 100%; height: 3px;
-      border-radius: 3px; background: #2a2a4a; outline: none; cursor: pointer;
-    }
-    input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none; width: 14px; height: 14px;
-      border-radius: 50%; background: #a78bfa; cursor: pointer; box-shadow: 0 0 5px #a78bfa77;
-    }
+    .download-btn { width:100%; padding:13px; border-radius:10px; border:none; background:linear-gradient(135deg,#10b981,#059669); color:#fff; font-size:.92rem; font-weight:700; cursor:pointer; transition:.2s; margin-top:auto; }
+    .download-btn:hover { opacity:.85; transform:translateY(-1px); }
+    .download-btn:disabled { opacity:.35; cursor:not-allowed; transform:none; }
 
-    .download-btn {
-      width: 100%; padding: 13px; border-radius: 10px; border: none;
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: #fff; font-size: .92rem; font-weight: 700;
-      cursor: pointer; transition: .2s; margin-top: auto;
-    }
-    .download-btn:hover { opacity: .85; transform: translateY(-1px); }
-    .download-btn:disabled { opacity: .35; cursor: not-allowed; transform: none; }
+    .canvas-area { flex:1; display:flex; align-items:center; justify-content:center; background:#080814; position:relative; overflow:hidden; }
+    .placeholder { text-align:center; color:#3a3a5a; user-select:none; }
+    .placeholder .big-icon { font-size:4.5rem; margin-bottom:14px; }
+    .placeholder p { font-size:.95rem; }
+    .placeholder small { font-size:.78rem; color:#2a2a4a; margin-top:6px; display:block; }
 
-    .canvas-area {
-      flex: 1; display: flex; align-items: center; justify-content: center;
-      background: #080814; position: relative; overflow: hidden;
-    }
-    .placeholder { text-align: center; color: #3a3a5a; user-select: none; }
-    .placeholder .big-icon { font-size: 4.5rem; margin-bottom: 14px; }
-    .placeholder p { font-size: .95rem; }
-    .placeholder small { font-size: .78rem; color: #2a2a4a; margin-top: 6px; display: block; }
+    #canvasWrapper { position:relative; display:none; box-shadow:0 8px 60px #00000099; }
+    #mainCanvas { display:block; border-radius:3px; }
 
-    #canvasWrapper { position: relative; display: none; box-shadow: 0 8px 60px #00000099; }
-    /* canvas element is full-res; we CSS-scale it to fit the viewport */
-    #mainCanvas { display: block; border-radius: 3px; image-rendering: auto; }
+    #cropOverlay { position:absolute; border:2px solid #a78bfa; box-shadow:0 0 0 9999px rgba(0,0,0,.6); cursor:move; display:none; }
+    .crop-handle { position:absolute; width:10px; height:10px; background:#a78bfa; border-radius:2px; }
+    .crop-handle.tl{top:-5px;left:-5px;cursor:nw-resize}
+    .crop-handle.tr{top:-5px;right:-5px;cursor:ne-resize}
+    .crop-handle.bl{bottom:-5px;left:-5px;cursor:sw-resize}
+    .crop-handle.br{bottom:-5px;right:-5px;cursor:se-resize}
 
-    #cropOverlay {
-      position: absolute; border: 2px solid #a78bfa;
-      box-shadow: 0 0 0 9999px rgba(0,0,0,.6);
-      cursor: move; display: none;
+    #dlOverlay {
+      position:absolute; inset:0; background:rgba(8,8,20,.8);
+      display:none; flex-direction:column; align-items:center; justify-content:center; gap:14px;
     }
-    .crop-handle { position: absolute; width: 10px; height: 10px; background: #a78bfa; border-radius: 2px; }
-    .crop-handle.tl { top:-5px; left:-5px; cursor: nw-resize; }
-    .crop-handle.tr { top:-5px; right:-5px; cursor: ne-resize; }
-    .crop-handle.bl { bottom:-5px; left:-5px; cursor: sw-resize; }
-    .crop-handle.br { bottom:-5px; right:-5px; cursor: se-resize; }
+    #dlOverlay.show { display:flex; }
+    .dl-bar-wrap { width:220px; height:6px; background:#2a2a4a; border-radius:4px; overflow:hidden; }
+    .dl-bar { height:100%; background:linear-gradient(90deg,#a78bfa,#60a5fa); width:0%; border-radius:4px; transition:width .1s; }
+    #dlLabel { font-size:.85rem; color:#a78bfa; }
 
-    #statusBar {
-      position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
-      background: #1a1a3a; border: 1px solid #a78bfa44;
-      color: #a78bfa; font-size: .75rem; padding: 5px 14px;
-      border-radius: 20px; display: none; white-space: nowrap;
-    }
-    #spinner {
-      position: absolute; display: none;
-      font-size: .85rem; color: #a78bfa;
-      background: #12122aee; padding: 12px 22px;
-      border-radius: 10px; border: 1px solid #a78bfa44;
-    }
-    #toast {
-      position: fixed; bottom: 22px; right: 22px;
-      background: #1e1e3a; border: 1px solid #a78bfa;
-      color: #e0e0ff; padding: 11px 18px;
-      border-radius: 10px; font-size: .82rem;
-      opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 999;
-    }
-    #toast.show { opacity: 1; }
+    #toast { position:fixed; bottom:22px; right:22px; background:#1e1e3a; border:1px solid #a78bfa; color:#e0e0ff; padding:11px 18px; border-radius:10px; font-size:.82rem; opacity:0; transition:opacity .3s; pointer-events:none; z-index:999; }
+    #toast.show { opacity:1; }
 
-    .sidebar::-webkit-scrollbar { width: 4px; }
-    .sidebar::-webkit-scrollbar-track { background: transparent; }
-    .sidebar::-webkit-scrollbar-thumb { background: #3a3a5a; border-radius: 4px; }
+    .sidebar::-webkit-scrollbar { width:4px; }
+    .sidebar::-webkit-scrollbar-track { background:transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background:#3a3a5a; border-radius:4px; }
   </style>
 </head>
 <body>
 
 <header>
   <h1>My Style Editor</h1>
-  <div class="style-badge">Auto-applies your preset · Full quality download</div>
+  <div class="badge">Instant preview · Full quality download</div>
 </header>
 
 <div class="app">
@@ -175,7 +123,7 @@
     <div>
       <div class="section-title">Your Style Preset</div>
       <div class="style-card">
-        <div class="style-card-title">Applied automatically on upload</div>
+        <div class="style-card-title">Auto-applied on every upload</div>
         <div class="style-params">
           <div class="param-item"><div class="param-name">Exposure</div><div class="param-val neg">-30</div></div>
           <div class="param-item"><div class="param-name">Brilliance</div><div class="param-val neg">-60</div></div>
@@ -232,14 +180,13 @@
     <div style="margin-top:auto;">
       <button class="download-btn" id="downloadBtn" disabled>⬇ Download Full Quality</button>
     </div>
-
   </div>
 
   <div class="canvas-area" id="canvasArea">
     <div class="placeholder" id="placeholder">
       <div class="big-icon">🖼️</div>
       <p>Upload an image to apply your style</p>
-      <small>Downloads at original full resolution</small>
+      <small>Preview is instant · Download is full resolution</small>
     </div>
     <div id="canvasWrapper">
       <canvas id="mainCanvas"></canvas>
@@ -250,8 +197,10 @@
         <div class="crop-handle br"></div>
       </div>
     </div>
-    <div id="statusBar">Your style applied · Full quality preserved</div>
-    <div id="spinner">Processing...</div>
+    <div id="dlOverlay">
+      <div id="dlLabel">Preparing full quality...</div>
+      <div class="dl-bar-wrap"><div class="dl-bar" id="dlBar"></div></div>
+    </div>
   </div>
 </div>
 
@@ -259,47 +208,67 @@
 
 <script>
 // ─────────────────────────────────────────────────────────────
-// YOUR EXACT STYLE SETTINGS
+//  YOUR STYLE SETTINGS
 // ─────────────────────────────────────────────────────────────
 const MY_STYLE = {
-  exposure:   -30,
-  brilliance: -60,
-  highlights: +10,
-  contrast:   -10,
-  brightness: -45,
-  vibrance:   -45,
-  warmth:     +10,
-  sharpness:  +20,
+  exposure:-30, brilliance:-60, highlights:+10,
+  contrast:-10, brightness:-45, vibrance:-45,
+  warmth:+10,   sharpness:+20,
 };
 
 // ─────────────────────────────────────────────────────────────
-// STATE
+//  LOOKUP TABLES  (built once at startup — eliminates Math.pow per pixel)
+//  rLUT[inputValue] = outputValue for red channel after all channel-
+//  independent adjustments (exposure, brilliance, brightness, contrast, warmth).
+//  Highlights & vibrance depend on all 3 channels so stay in the loop.
+// ─────────────────────────────────────────────────────────────
+const rLUT = new Uint8Array(256);
+const gLUT = new Uint8Array(256);
+const bLUT = new Uint8Array(256);
+
+(function buildLUTs() {
+  const expF   = 1 + MY_STYLE.exposure   / 100;    // 0.70
+  const brillA = -MY_STYLE.brilliance    / 100;    // 0.60
+  const gamma  = 1 - MY_STYLE.brightness / 100;    // 1.45
+  const conF   = 1 + MY_STYLE.contrast   / 100;    // 0.90
+
+  for (let i = 0; i < 256; i++) {
+    let v = i * expF;
+    v += (128 - v) * brillA;
+    v  = 255 * Math.pow(v < 0 ? 0 : v / 255, gamma);
+    v  = 128 + (v - 128) * conF;
+    rLUT[i] = v + 10 > 255 ? 255 : v + 10 < 0 ? 0 : (v + 10) | 0;
+    gLUT[i] = v +  3 > 255 ? 255 : v +  3 < 0 ? 0 : (v +  3) | 0;
+    bLUT[i] = v - 10 > 255 ? 255 : v - 10 < 0 ? 0 : (v - 10) | 0;
+  }
+})();
+
+// ─────────────────────────────────────────────────────────────
+//  STATE
 // ─────────────────────────────────────────────────────────────
 const state = {
-  source: null,        // full-res original ImageData (never modified after load)
-  displayScale: 1,     // canvas CSS scale ratio
-  brightness: 0, contrast: 0, saturation: 0, hue: 0,
-  cropping: false,
-  crop: null,          // stored in canvas (full-res) pixels
+  sourceFullRes : null,   // full-res ImageData (up to 4000px) — used for download
+  source        : null,   // display-res ImageData (up to 1200px) — used for preview
+  displayScale  : 1,      // canvas CSS scale factor
+  brightness:0, contrast:0, saturation:0, hue:0,
+  cropping:false, crop:null,
 };
 
 const canvas  = document.getElementById('mainCanvas');
-const ctx     = canvas.getContext('2d', { willReadFrequently: true });
+const ctx     = canvas.getContext('2d', { willReadFrequently:true });
 const wrapper = document.getElementById('canvasWrapper');
 const overlay = document.getElementById('cropOverlay');
-const ph      = document.getElementById('placeholder');
-const spinner = document.getElementById('spinner');
 
 // ─────────────────────────────────────────────────────────────
-// UPLOAD
+//  UPLOAD
 // ─────────────────────────────────────────────────────────────
 document.getElementById('uploadZone').addEventListener('click', () =>
   document.getElementById('fileInput').click());
 
 document.getElementById('fileInput').addEventListener('change', e => {
   if (e.target.files[0]) loadFile(e.target.files[0]);
+  e.target.value = '';
 });
-
 ['dragover','dragenter'].forEach(ev =>
   document.getElementById('uploadZone').addEventListener(ev, e => {
     e.preventDefault(); e.currentTarget.classList.add('drag-over');
@@ -316,294 +285,209 @@ document.getElementById('uploadZone').addEventListener('drop', e => {
 });
 
 function loadFile(file) {
-  showSpinner(true);
   const reader = new FileReader();
   reader.onload = ev => {
     const img = new Image();
     img.onload = () => {
-      // Cap at 4000px max dimension to keep processing fast
-      // but still much higher than viewport — full quality for most phones
-      const MAX = 4000;
-      let w = img.width, h = img.height;
-      if (w > MAX || h > MAX) {
-        const s = Math.min(MAX / w, MAX / h);
-        w = Math.round(w * s); h = Math.round(h * s);
+      // Store full-res (max 4000px) for download
+      const MAX_SRC = 4000;
+      let fw = img.width, fh = img.height;
+      if (fw > MAX_SRC || fh > MAX_SRC) {
+        const s = Math.min(MAX_SRC / fw, MAX_SRC / fh);
+        fw = fw * s | 0; fh = fh * s | 0;
       }
+      state.sourceFullRes = drawToImageData(img, fw, fh);
 
-      // Draw at full (capped) resolution into canvas
-      canvas.width  = w;
-      canvas.height = h;
-      ctx.clearRect(0, 0, w, h);
-      ctx.drawImage(img, 0, 0, w, h);
-      state.source = ctx.getImageData(0, 0, w, h);
-
-      // CSS-scale the canvas element to fit the viewport (no pixel loss)
-      fitCanvas();
-
-      ph.style.display      = 'none';
-      wrapper.style.display = 'block';
-      document.getElementById('downloadBtn').disabled = false;
-      document.getElementById('statusBar').style.display = 'block';
+      // Store display-res (max 1200px) for fast preview
+      const MAX_PRV = 1200;
+      let pw = fw, ph = fh;
+      if (pw > MAX_PRV || ph > MAX_PRV) {
+        const s = Math.min(MAX_PRV / pw, MAX_PRV / ph);
+        pw = pw * s | 0; ph = ph * s | 0;
+      }
+      state.source = pw === fw
+        ? cloneID(state.sourceFullRes)
+        : drawToImageData(img, pw, ph);
 
       resetSliders();
-      setTimeout(() => {             // let browser paint first
-        applyStyleAndRender();
-        showSpinner(false);
-        toast('Style applied — full quality preserved!');
-      }, 30);
+      canvas.width  = pw;
+      canvas.height = ph;
+      fitCanvas();
+
+      document.getElementById('placeholder').style.display   = 'none';
+      wrapper.style.display                                   = 'block';
+      document.getElementById('downloadBtn').disabled         = false;
+
+      render();
+      toast('Style applied!');
     };
     img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
 }
 
+function drawToImageData(img, w, h) {
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  c.getContext('2d').drawImage(img, 0, 0, w, h);
+  return c.getContext('2d').getImageData(0, 0, w, h);
+}
+
 function fitCanvas() {
-  const area  = document.getElementById('canvasArea');
-  const maxW  = area.clientWidth  - 40;
-  const maxH  = area.clientHeight - 40;
-  const scale = Math.min(maxW / canvas.width, maxH / canvas.height, 1);
-  state.displayScale    = scale;
-  canvas.style.width    = Math.round(canvas.width  * scale) + 'px';
-  canvas.style.height   = Math.round(canvas.height * scale) + 'px';
+  const area = document.getElementById('canvasArea');
+  const s = Math.min((area.clientWidth - 40) / canvas.width,
+                     (area.clientHeight - 40) / canvas.height, 1);
+  state.displayScale   = s;
+  canvas.style.width   = (canvas.width  * s) + 'px';
+  canvas.style.height  = (canvas.height * s) + 'px';
 }
 
 // ─────────────────────────────────────────────────────────────
-// PIXEL HELPERS
+//  FAST STYLE (LUT — no sharpen, used for instant preview)
 // ─────────────────────────────────────────────────────────────
-function clamp(v) { return v < 0 ? 0 : v > 255 ? 255 : v | 0; }
-
-// Copy ImageData without sharing the buffer
-function cloneImageData(id) {
-  return new ImageData(new Uint8ClampedArray(id.data), id.width, id.height);
-}
-
-// ─────────────────────────────────────────────────────────────
-// YOUR STYLE — pixel-level, all in one pass + sharpness
-// ─────────────────────────────────────────────────────────────
-function applyMyStyle(imageData) {
-  const d = imageData.data;
+function applyStyleFast(id) {
+  const d = id.data;
+  const vib = MY_STYLE.vibrance / 100;          // -0.45
+  const hlBoost = MY_STYLE.highlights / 100 * 0.08; // 0.008
 
   for (let i = 0; i < d.length; i += 4) {
-    let r = d[i], g = d[i+1], b = d[i+2];
+    let r = rLUT[d[i]], g = gLUT[d[i+1]], b = bLUT[d[i+2]];
 
-    // 1. Exposure -30  → multiply (like reducing EV)
-    r *= 0.70; g *= 0.70; b *= 0.70;
-
-    // 2. Brilliance -60 → pull toward midgray (flatten tonal range)
-    r += (128 - r) * 0.50;
-    g += (128 - g) * 0.50;
-    b += (128 - b) * 0.50;
-
-    // 3. Brightness -45 → gamma curve (darkens midtones)
-    r = 255 * Math.pow(r / 255, 1.38);
-    g = 255 * Math.pow(g / 255, 1.38);
-    b = 255 * Math.pow(b / 255, 1.38);
-
-    // 4. Contrast -10 → pull toward 128 by 10%
-    r = 128 + (r - 128) * 0.90;
-    g = 128 + (g - 128) * 0.90;
-    b = 128 + (b - 128) * 0.90;
-
-    // 5. Highlights +10 → gently lift already-bright areas
-    const luma = 0.299 * r + 0.587 * g + 0.114 * b;
+    // Highlights: lift bright pixels slightly
+    const luma = (r * 77 + g * 150 + b * 29) >> 8;
     if (luma > 170) {
-      const t = (luma - 170) / 85 * 0.08;
-      r += (255 - r) * t;
-      g += (255 - g) * t;
-      b += (255 - b) * t;
+      const t = (luma - 170) / 85 * hlBoost;
+      r = (r + (255 - r) * t) | 0;
+      g = (g + (255 - g) * t) | 0;
+      b = (b + (255 - b) * t) | 0;
     }
 
-    // 6. Vibrance -45 → desaturate vivid colors proportionally
+    // Vibrance: desaturate vivid colors
     const maxC = r > g ? (r > b ? r : b) : (g > b ? g : b);
     const minC = r < g ? (r < b ? r : b) : (g < b ? g : b);
     const sat  = maxC > 0 ? (maxC - minC) / maxC : 0;
-    const gray = 0.299 * r + 0.587 * g + 0.114 * b;
-    const vib  = sat * 0.45;
-    r += (gray - r) * vib;
-    g += (gray - g) * vib;
-    b += (gray - b) * vib;
-
-    // 7. Warmth +10 → subtle warm tint
-    r += 10;
-    g +=  3;
-    b -= 10;
-
-    d[i]   = clamp(r);
-    d[i+1] = clamp(g);
-    d[i+2] = clamp(b);
-  }
-
-  // 8. Sharpness +20 → lightweight unsharp mask
-  sharpen(imageData, 0.18);
-}
-
-function sharpen(imageData, amount) {
-  const w   = imageData.width, h = imageData.height;
-  const src = new Uint8ClampedArray(imageData.data);
-  const d   = imageData.data;
-  const k   = [0, -amount, 0,  -amount, 1 + 4 * amount, -amount,  0, -amount, 0];
-  for (let y = 1; y < h - 1; y++) {
-    for (let x = 1; x < w - 1; x++) {
-      const idx = (y * w + x) * 4;
-      for (let c = 0; c < 3; c++) {
-        let v = 0;
-        for (let ky = -1; ky <= 1; ky++)
-          for (let kx = -1; kx <= 1; kx++)
-            v += src[((y + ky) * w + (x + kx)) * 4 + c] * k[(ky + 1) * 3 + (kx + 1)];
-        d[idx + c] = clamp(v);
-      }
+    if (sat > 0.04) {
+      const blend = sat * (-vib); // positive blend amount
+      r = (r + (luma - r) * blend) | 0;
+      g = (g + (luma - g) * blend) | 0;
+      b = (b + (luma - b) * blend) | 0;
     }
+
+    d[i] = r; d[i+1] = g; d[i+2] = b;
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// FINE-TUNE (pixel-space, so download matches preview exactly)
-// ─────────────────────────────────────────────────────────────
-function applyFineTune(imageData) {
-  const d = imageData.data;
-  const brt = state.brightness / 100;   // -1 to 1
-  const con = 1 + state.contrast / 100; // 0 to 2
+function applyFineTune(id) {
+  const d  = id.data;
+  const brt = state.brightness / 100;
+  const con = 1 + state.contrast / 100;
   const sat = 1 + state.saturation / 100;
   const hue = state.hue * Math.PI / 180;
+  const ch  = Math.cos(hue), sh = Math.sin(hue);
+  const any = state.brightness || state.contrast || state.saturation || state.hue;
+  if (!any) return;
 
   for (let i = 0; i < d.length; i += 4) {
     let r = d[i], g = d[i+1], b = d[i+2];
 
-    // brightness
-    if (brt !== 0) { r += brt * 255; g += brt * 255; b += brt * 255; }
-
-    // contrast
-    if (con !== 1) { r = 128 + (r - 128) * con; g = 128 + (g - 128) * con; b = 128 + (b - 128) * con; }
-
-    // saturation
-    if (sat !== 1) {
-      const gr = 0.299 * r + 0.587 * g + 0.114 * b;
-      r = gr + (r - gr) * sat;
-      g = gr + (g - gr) * sat;
-      b = gr + (b - gr) * sat;
+    if (state.brightness) { r += brt*255; g += brt*255; b += brt*255; }
+    if (state.contrast)   { r = 128+(r-128)*con; g = 128+(g-128)*con; b = 128+(b-128)*con; }
+    if (state.saturation) {
+      const gr = r*0.299 + g*0.587 + b*0.114;
+      r = gr+(r-gr)*sat; g = gr+(g-gr)*sat; b = gr+(b-gr)*sat;
     }
-
-    // hue rotate (rotate in RGB space via matrix)
-    if (state.hue !== 0) {
-      const cos = Math.cos(hue), sin = Math.sin(hue);
-      const nr = r*(0.213+cos*0.787-sin*0.213) + g*(0.715-cos*0.715-sin*0.715) + b*(0.072-cos*0.072+sin*0.928);
-      const ng = r*(0.213-cos*0.213+sin*0.143) + g*(0.715+cos*0.285+sin*0.140) + b*(0.072-cos*0.072-sin*0.283);
-      const nb = r*(0.213-cos*0.213-sin*0.787) + g*(0.715-cos*0.715+sin*0.715) + b*(0.072+cos*0.928+sin*0.072);
-      r = nr; g = ng; b = nb;
+    if (state.hue) {
+      const nr = r*(0.213+ch*0.787-sh*0.213) + g*(0.715-ch*0.715-sh*0.715) + b*(0.072-ch*0.072+sh*0.928);
+      const ng = r*(0.213-ch*0.213+sh*0.143) + g*(0.715+ch*0.285+sh*0.140) + b*(0.072-ch*0.072-sh*0.283);
+      const nb = r*(0.213-ch*0.213-sh*0.787) + g*(0.715-ch*0.715+sh*0.715) + b*(0.072+ch*0.928+sh*0.072);
+      r=nr; g=ng; b=nb;
     }
-
-    d[i]   = clamp(r);
-    d[i+1] = clamp(g);
-    d[i+2] = clamp(b);
+    d[i]   = r<0?0:r>255?255:r|0;
+    d[i+1] = g<0?0:g>255?255:g|0;
+    d[i+2] = b<0?0:b>255?255:b|0;
   }
 }
 
 // ─────────────────────────────────────────────────────────────
-// RENDER — applies style + fine-tune to the source, paints canvas
+//  RENDER (preview — fast)
 // ─────────────────────────────────────────────────────────────
-function applyStyleAndRender() {
+function render() {
   if (!state.source) return;
-  const id = cloneImageData(state.source);
-  applyMyStyle(id);
-  if (state.brightness !== 0 || state.contrast !== 0 || state.saturation !== 0 || state.hue !== 0)
-    applyFineTune(id);
+  const id = cloneID(state.source);
+  applyStyleFast(id);
+  applyFineTune(id);
   ctx.putImageData(id, 0, 0);
 }
 
 // ─────────────────────────────────────────────────────────────
-// SLIDERS
+//  SLIDERS
 // ─────────────────────────────────────────────────────────────
 ['brightness','contrast','saturation','hue'].forEach(id => {
   document.getElementById(id).addEventListener('input', function() {
     state[id] = +this.value;
-    document.getElementById(id + 'Val').textContent = this.value;
-    applyStyleAndRender();
+    document.getElementById(id+'Val').textContent = this.value;
+    render();
   });
 });
-
 function resetSliders() {
   ['brightness','contrast','saturation','hue'].forEach(id => {
     document.getElementById(id).value = 0;
     state[id] = 0;
-    document.getElementById(id + 'Val').textContent = 0;
+    document.getElementById(id+'Val').textContent = 0;
   });
 }
-
 document.getElementById('reapplyBtn').addEventListener('click', () => {
   if (!state.source) return;
-  resetSliders();
-  applyStyleAndRender();
-  toast('Style re-applied!');
+  resetSliders(); render(); toast('Style re-applied!');
 });
 
 // ─────────────────────────────────────────────────────────────
-// TRANSFORM
+//  TRANSFORM
 // ─────────────────────────────────────────────────────────────
-document.getElementById('rotateLeft').addEventListener('click',  () => transformSource(-90));
-document.getElementById('rotateRight').addEventListener('click', () => transformSource(+90));
-document.getElementById('flipH').addEventListener('click', () => flipSource('h'));
-document.getElementById('flipV').addEventListener('click', () => flipSource('v'));
+document.getElementById('rotateLeft').addEventListener('click',  () => doTransform('rotate', -90));
+document.getElementById('rotateRight').addEventListener('click', () => doTransform('rotate', +90));
+document.getElementById('flipH').addEventListener('click', () => doTransform('flip', 'h'));
+document.getElementById('flipV').addEventListener('click', () => doTransform('flip', 'v'));
 
-function transformSource(deg) {
+function doTransform(type, param) {
   if (!state.source) return;
-  const orig = state.source;
-  const newW = orig.height, newH = orig.width;
-  const tmp = document.createElement('canvas');
-  tmp.width = newW; tmp.height = newH;
-  const tc = tmp.getContext('2d');
-  tc.translate(newW / 2, newH / 2);
-  tc.rotate(deg * Math.PI / 180);
-  const src = document.createElement('canvas');
-  src.width = orig.width; src.height = orig.height;
-  src.getContext('2d').putImageData(orig, 0, 0);
-  tc.drawImage(src, -orig.width / 2, -orig.height / 2);
-  canvas.width = newW; canvas.height = newH;
-  state.source = tmp.getContext('2d').getImageData(0, 0, newW, newH);
-  fitCanvas();
-  applyStyleAndRender();
+  state.source        = transformID(state.source, type, param);
+  state.sourceFullRes = transformID(state.sourceFullRes, type, param);
+  if (type === 'rotate') { canvas.width = state.source.height; canvas.height = state.source.width; }
+  else                   { canvas.width = state.source.width;  canvas.height = state.source.height; }
+  fitCanvas(); render();
 }
 
-function flipSource(axis) {
-  if (!state.source) return;
-  const orig = state.source;
-  const tmp = document.createElement('canvas');
-  tmp.width = orig.width; tmp.height = orig.height;
-  const tc = tmp.getContext('2d');
-  tc.translate(axis === 'h' ? orig.width : 0, axis === 'v' ? orig.height : 0);
-  tc.scale(axis === 'h' ? -1 : 1, axis === 'v' ? -1 : 1);
-  const src = document.createElement('canvas');
-  src.width = orig.width; src.height = orig.height;
-  src.getContext('2d').putImageData(orig, 0, 0);
-  tc.drawImage(src, 0, 0);
-  state.source = tmp.getContext('2d').getImageData(0, 0, orig.width, orig.height);
-  applyStyleAndRender();
+function transformID(src, type, param) {
+  const isRotate = type === 'rotate';
+  const newW = isRotate ? src.height : src.width;
+  const newH = isRotate ? src.width  : src.height;
+  const c = document.createElement('canvas'); c.width = newW; c.height = newH;
+  const tc = c.getContext('2d');
+  const sc = document.createElement('canvas'); sc.width = src.width; sc.height = src.height;
+  sc.getContext('2d').putImageData(src, 0, 0);
+  if (isRotate) {
+    tc.translate(newW/2, newH/2); tc.rotate(param * Math.PI/180);
+    tc.drawImage(sc, -src.width/2, -src.height/2);
+  } else {
+    tc.translate(param==='h'?src.width:0, param==='v'?src.height:0);
+    tc.scale(param==='h'?-1:1, param==='v'?-1:1);
+    tc.drawImage(sc, 0, 0);
+  }
+  return c.getContext('2d').getImageData(0, 0, newW, newH);
 }
 
 // ─────────────────────────────────────────────────────────────
-// CROP — coordinates stored in FULL canvas pixels
+//  CROP
 // ─────────────────────────────────────────────────────────────
 let cropDrag = { active:false, mode:'move', sx:0, sy:0, ox:0, oy:0, ow:0, oh:0 };
 
-// Convert a client position to canvas pixel position
-function clientToCanvas(clientX, clientY) {
-  const rect = canvas.getBoundingClientRect();
-  return {
-    x: (clientX - rect.left)  * (canvas.width  / rect.width),
-    y: (clientY - rect.top)   * (canvas.height / rect.height),
-  };
-}
-
-// Convert canvas pixel position to overlay CSS position (within wrapper)
-function canvasToOverlay(cx, cy, cw, ch) {
-  const scale = state.displayScale;
-  return { x: cx * scale, y: cy * scale, w: cw * scale, h: ch * scale };
-}
-
+// All crop coords are in canvas (display-res) pixel space
 document.getElementById('cropStart').addEventListener('click', () => {
   if (!state.source) return;
   state.cropping = true;
-  const pad = 20 / state.displayScale;
-  state.crop = { x: pad, y: pad, w: canvas.width - pad*2, h: canvas.height - pad*2 };
+  const pad = 20;
+  state.crop = { x:pad, y:pad, w:canvas.width-pad*2, h:canvas.height-pad*2 };
   showCropOverlay();
   document.getElementById('cropActions').style.display = 'flex';
   document.getElementById('cropStart').style.display   = 'none';
@@ -611,50 +495,46 @@ document.getElementById('cropStart').addEventListener('click', () => {
 
 document.getElementById('cropApply').addEventListener('click', () => {
   const c = state.crop;
-  const tmp = document.createElement('canvas');
-  tmp.width = Math.round(c.w); tmp.height = Math.round(c.h);
-  const tc = tmp.getContext('2d');
-  const src = document.createElement('canvas');
-  src.width = state.source.width; src.height = state.source.height;
-  src.getContext('2d').putImageData(state.source, 0, 0);
-  tc.drawImage(src, c.x, c.y, c.w, c.h, 0, 0, c.w, c.h);
-  canvas.width  = tmp.width;
-  canvas.height = tmp.height;
-  state.source = tc.getImageData(0, 0, tmp.width, tmp.height);
-  fitCanvas();
-  cancelCrop();
-  applyStyleAndRender();
-  toast('Crop applied!');
+  // Scale crop coords to full-res space
+  const sx = state.sourceFullRes.width  / state.source.width;
+  const sy = state.sourceFullRes.height / state.source.height;
+  state.source        = cropID(state.source,        c.x,    c.y,    c.w,    c.h);
+  state.sourceFullRes = cropID(state.sourceFullRes, c.x*sx, c.y*sy, c.w*sx, c.h*sy);
+  canvas.width = state.source.width; canvas.height = state.source.height;
+  fitCanvas(); cancelCrop(); render(); toast('Crop applied!');
 });
 
 document.getElementById('cropCancel').addEventListener('click', cancelCrop);
 
+function cropID(src, x, y, w, h) {
+  x=x|0; y=y|0; w=w|0; h=h|0;
+  const c = document.createElement('canvas'); c.width=w; c.height=h;
+  const sc = document.createElement('canvas'); sc.width=src.width; sc.height=src.height;
+  sc.getContext('2d').putImageData(src, 0, 0);
+  c.getContext('2d').drawImage(sc, x, y, w, h, 0, 0, w, h);
+  return c.getContext('2d').getImageData(0, 0, w, h);
+}
+
 function showCropOverlay() {
-  const o = canvasToOverlay(state.crop.x, state.crop.y, state.crop.w, state.crop.h);
+  const s = state.displayScale;
+  const c = state.crop;
   Object.assign(overlay.style, {
-    display: 'block',
-    left:   o.x + 'px',
-    top:    o.y + 'px',
-    width:  o.w + 'px',
-    height: o.h + 'px',
+    display:'block', left:c.x*s+'px', top:c.y*s+'px', width:c.w*s+'px', height:c.h*s+'px'
   });
 }
 
 overlay.addEventListener('mousedown', e => {
   if (!state.cropping) return;
   const handle = e.target.classList.contains('crop-handle');
-  const pos = clientToCanvas(e.clientX, e.clientY);
-  cropDrag.active = true;
-  cropDrag.mode   = handle ? e.target.className.replace('crop-handle ','') : 'move';
-  cropDrag.sx = e.clientX; cropDrag.sy = e.clientY;
-  cropDrag.ox = state.crop.x; cropDrag.oy = state.crop.y;
-  cropDrag.ow = state.crop.w; cropDrag.oh = state.crop.h;
+  cropDrag = {
+    active:true, mode: handle ? e.target.className.replace('crop-handle ','') : 'move',
+    sx:e.clientX, sy:e.clientY,
+    ox:state.crop.x, oy:state.crop.y, ow:state.crop.w, oh:state.crop.h
+  };
   e.preventDefault();
 });
-
 document.addEventListener('mousemove', e => {
   if (!cropDrag.active) return;
-  // delta in display pixels → convert to canvas pixels
   const s   = state.displayScale;
   const dx  = (e.clientX - cropDrag.sx) / s;
   const dy  = (e.clientY - cropDrag.sy) / s;
@@ -665,19 +545,12 @@ document.addEventListener('mousemove', e => {
     c.y = Math.max(0, Math.min(canvas.height - c.h, cropDrag.oy + dy));
   } else {
     if (cropDrag.mode.includes('r')) c.w = Math.max(MIN, Math.min(canvas.width  - c.x, cropDrag.ow + dx));
-    if (cropDrag.mode.includes('l')) {
-      c.x = Math.min(cropDrag.ox + cropDrag.ow - MIN, cropDrag.ox + dx);
-      c.w = cropDrag.ow - (c.x - cropDrag.ox);
-    }
+    if (cropDrag.mode.includes('l')) { c.x = Math.min(cropDrag.ox+cropDrag.ow-MIN, cropDrag.ox+dx); c.w = cropDrag.ow-(c.x-cropDrag.ox); }
     if (cropDrag.mode.includes('b')) c.h = Math.max(MIN, Math.min(canvas.height - c.y, cropDrag.oh + dy));
-    if (cropDrag.mode.includes('t')) {
-      c.y = Math.min(cropDrag.oy + cropDrag.oh - MIN, cropDrag.oy + dy);
-      c.h = cropDrag.oh - (c.y - cropDrag.oy);
-    }
+    if (cropDrag.mode.includes('t')) { c.y = Math.min(cropDrag.oy+cropDrag.oh-MIN, cropDrag.oy+dy); c.h = cropDrag.oh-(c.y-cropDrag.oy); }
   }
   showCropOverlay();
 });
-
 document.addEventListener('mouseup', () => { cropDrag.active = false; });
 
 function cancelCrop() {
@@ -688,25 +561,158 @@ function cancelCrop() {
 }
 
 // ─────────────────────────────────────────────────────────────
-// DOWNLOAD — from the full-res canvas (no re-scaling)
+//  DOWNLOAD — Web Worker processes full-res (non-blocking)
 // ─────────────────────────────────────────────────────────────
-document.getElementById('downloadBtn').addEventListener('click', () => {
-  // canvas already contains the full-res styled image
-  canvas.toBlob(blob => {
-    const url  = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.download = 'my-style.jpg';
-    link.href = url;
-    link.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-    toast('Full quality image downloaded!');
-  }, 'image/jpeg', 0.97);
-});
+document.getElementById('downloadBtn').addEventListener('click', startDownload);
+
+function startDownload() {
+  if (!state.sourceFullRes) return;
+
+  const dlOverlay = document.getElementById('dlOverlay');
+  const dlBar     = document.getElementById('dlBar');
+  const dlLabel   = document.getElementById('dlLabel');
+  dlOverlay.classList.add('show');
+  dlBar.style.width = '10%';
+  dlLabel.textContent = 'Processing full resolution...';
+
+  // Inline the worker code as a blob so no extra file is needed
+  const workerSrc = `
+self.onmessage = function(e) {
+  const { pixels, width, height, style, brightness, contrast, saturation, hue } = e.data;
+  const d = new Uint8ClampedArray(pixels);
+
+  // Build LUTs inside worker
+  const rL = new Uint8Array(256), gL = new Uint8Array(256), bL = new Uint8Array(256);
+  const expF  = 1 + style.exposure   / 100;
+  const brillA= -style.brilliance    / 100;
+  const gamma = 1 - style.brightness / 100;
+  const conF  = 1 + style.contrast   / 100;
+  for (let i = 0; i < 256; i++) {
+    let v = i * expF;
+    v += (128 - v) * brillA;
+    v  = 255 * Math.pow(v < 0 ? 0 : v / 255, gamma);
+    v  = 128 + (v - 128) * conF;
+    rL[i] = v+10>255?255:v+10<0?0:(v+10)|0;
+    gL[i] = v+ 3>255?255:v+ 3<0?0:(v+ 3)|0;
+    bL[i] = v-10>255?255:v-10<0?0:(v-10)|0;
+  }
+
+  const hlBoost = style.highlights / 100 * 0.08;
+  const vibNeg  = -style.vibrance / 100;
+
+  // Pass 1: LUT + highlights + vibrance
+  for (let i = 0; i < d.length; i += 4) {
+    let r = rL[d[i]], g = gL[d[i+1]], b = bL[d[i+2]];
+    const luma = (r*77 + g*150 + b*29) >> 8;
+    if (luma > 170) {
+      const t = (luma-170)/85*hlBoost;
+      r=(r+(255-r)*t)|0; g=(g+(255-g)*t)|0; b=(b+(255-b)*t)|0;
+    }
+    const maxC=r>g?(r>b?r:b):(g>b?g:b);
+    const minC=r<g?(r<b?r:b):(g<b?g:b);
+    const sat=(maxC>0?(maxC-minC)/maxC:0);
+    if (sat>0.04) {
+      const blend=sat*vibNeg;
+      r=(r+(luma-r)*blend)|0; g=(g+(luma-g)*blend)|0; b=(b+(luma-b)*blend)|0;
+    }
+    d[i]=r<0?0:r>255?255:r; d[i+1]=g<0?0:g>255?255:g; d[i+2]=b<0?0:b>255?255:b;
+  }
+
+  self.postMessage({type:'progress', pct:50});
+
+  // Pass 2: Sharpen
+  const src = new Uint8ClampedArray(d);
+  const amt = style.sharpness / 100;
+  const k = [0,-amt,0,-amt,1+4*amt,-amt,0,-amt,0];
+  for (let y=1; y<height-1; y++) {
+    for (let x=1; x<width-1; x++) {
+      const idx=(y*width+x)*4;
+      for (let c=0;c<3;c++) {
+        let v=0;
+        for(let ky=-1;ky<=1;ky++) for(let kx=-1;kx<=1;kx++)
+          v+=src[((y+ky)*width+(x+kx))*4+c]*k[(ky+1)*3+(kx+1)];
+        d[idx+c]=v<0?0:v>255?255:v|0;
+      }
+    }
+  }
+
+  self.postMessage({type:'progress', pct:85});
+
+  // Pass 3: Fine-tune sliders
+  const brt=brightness/100, con=1+contrast/100, sat2=1+saturation/100;
+  const hrad=hue*Math.PI/180, ch=Math.cos(hrad), sh=Math.sin(hrad);
+  if (brightness||contrast||saturation||hue) {
+    for (let i=0;i<d.length;i+=4) {
+      let r=d[i],g=d[i+1],b=d[i+2];
+      if(brightness){r+=brt*255;g+=brt*255;b+=brt*255;}
+      if(contrast){r=128+(r-128)*con;g=128+(g-128)*con;b=128+(b-128)*con;}
+      if(saturation){const gr=r*0.299+g*0.587+b*0.114;r=gr+(r-gr)*sat2;g=gr+(g-gr)*sat2;b=gr+(b-gr)*sat2;}
+      if(hue){
+        const nr=r*(0.213+ch*0.787-sh*0.213)+g*(0.715-ch*0.715-sh*0.715)+b*(0.072-ch*0.072+sh*0.928);
+        const ng=r*(0.213-ch*0.213+sh*0.143)+g*(0.715+ch*0.285+sh*0.140)+b*(0.072-ch*0.072-sh*0.283);
+        const nb=r*(0.213-ch*0.213-sh*0.787)+g*(0.715-ch*0.715+sh*0.715)+b*(0.072+ch*0.928+sh*0.072);
+        r=nr;g=ng;b=nb;
+      }
+      d[i]=r<0?0:r>255?255:r|0;d[i+1]=g<0?0:g>255?255:g|0;d[i+2]=b<0?0:b>255?255:b|0;
+    }
+  }
+
+  self.postMessage({type:'done', pixels:d.buffer}, [d.buffer]);
+};
+  `;
+
+  const blob      = new Blob([workerSrc], { type:'application/javascript' });
+  const workerURL = URL.createObjectURL(blob);
+  const worker    = new Worker(workerURL);
+
+  // Copy source buffer (transferable)
+  const srcCopy = new Uint8ClampedArray(state.sourceFullRes.data);
+  const fw = state.sourceFullRes.width, fh = state.sourceFullRes.height;
+
+  worker.onmessage = (e) => {
+    if (e.data.type === 'progress') {
+      dlBar.style.width = e.data.pct + '%';
+      return;
+    }
+    // done
+    dlBar.style.width = '100%';
+    dlLabel.textContent = 'Saving...';
+
+    const outID = new ImageData(new Uint8ClampedArray(e.data.pixels), fw, fh);
+    const dlC   = document.createElement('canvas');
+    dlC.width = fw; dlC.height = fh;
+    dlC.getContext('2d').putImageData(outID, 0, 0);
+
+    dlC.toBlob(blob2 => {
+      const url  = URL.createObjectURL(blob2);
+      const link = document.createElement('a');
+      link.href = url; link.download = 'my-style.jpg'; link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      URL.revokeObjectURL(workerURL);
+      worker.terminate();
+      dlOverlay.classList.remove('show');
+      dlBar.style.width = '0%';
+      toast('Full quality image saved!');
+    }, 'image/jpeg', 0.97);
+  };
+
+  worker.postMessage({
+    pixels: srcCopy.buffer,
+    width: fw, height: fh,
+    style: MY_STYLE,
+    brightness: state.brightness,
+    contrast:   state.contrast,
+    saturation: state.saturation,
+    hue:        state.hue,
+  }, [srcCopy.buffer]);
+}
 
 // ─────────────────────────────────────────────────────────────
-// UTILS
+//  UTILS
 // ─────────────────────────────────────────────────────────────
-function showSpinner(v) { spinner.style.display = v ? 'block' : 'none'; }
+function cloneID(id) {
+  return new ImageData(new Uint8ClampedArray(id.data), id.width, id.height);
+}
 
 let toastTimer;
 function toast(msg) {
