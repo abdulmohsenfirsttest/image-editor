@@ -228,16 +228,22 @@ const gLUT = new Uint8Array(256);
 const bLUT = new Uint8Array(256);
 
 (function buildLUTs() {
-  const expF   = 1 + MY_STYLE.exposure   / 100;    // 0.70
-  const brillA = -MY_STYLE.brilliance    / 100;    // 0.60
-  const gamma  = 1 - MY_STYLE.brightness / 100;    // 1.45
-  const conF   = 1 + MY_STYLE.contrast   / 100;    // 0.90
+  // Apple Photos -30 exposure ≈ 0.82x (not 0.70 — that was too dark)
+  const expF  = 0.82;
+  // Brilliance -60: Apple Photos compresses highlights & lifts shadows slightly
+  // (matte/flat look). Do NOT pull toward gray — that causes foggy haze.
+  // Implemented as a gentle tone-curve compression: shrink distance from 128 by 18%.
+  const brillComp = 0.18;
+  // Brightness -45 ≈ gamma 1.28 (not 1.45 — that was too dark)
+  const gamma = 1.28;
+  // Contrast -10: pull 10% toward 128
+  const conF  = 0.90;
 
   for (let i = 0; i < 256; i++) {
     let v = i * expF;
-    v += (128 - v) * brillA;
-    v  = 255 * Math.pow(v < 0 ? 0 : v / 255, gamma);
-    v  = 128 + (v - 128) * conF;
+    v = 128 + (v - 128) * (1 - brillComp);   // compress range gently
+    v = 255 * Math.pow(v < 0 ? 0 : v / 255, gamma);
+    v = 128 + (v - 128) * conF;
     rLUT[i] = v + 3 > 255 ? 255 : v + 3 < 0 ? 0 : (v + 3) | 0;
     gLUT[i] = v + 1 > 255 ? 255 : v + 1 < 0 ? 0 : (v + 1) | 0;
     bLUT[i] = v - 3 > 255 ? 255 : v - 3 < 0 ? 0 : (v - 3) | 0;
@@ -608,15 +614,15 @@ self.onmessage = function(e) {
 
   // Build LUTs inside worker
   const rL = new Uint8Array(256), gL = new Uint8Array(256), bL = new Uint8Array(256);
-  const expF  = 1 + style.exposure   / 100;
-  const brillA= -style.brilliance    / 100;
-  const gamma = 1 - style.brightness / 100;
-  const conF  = 1 + style.contrast   / 100;
+  const expF      = 0.82;
+  const brillComp = 0.18;
+  const gamma     = 1.28;
+  const conF      = 0.90;
   for (let i = 0; i < 256; i++) {
     let v = i * expF;
-    v += (128 - v) * brillA;
-    v  = 255 * Math.pow(v < 0 ? 0 : v / 255, gamma);
-    v  = 128 + (v - 128) * conF;
+    v = 128 + (v - 128) * (1 - brillComp);
+    v = 255 * Math.pow(v < 0 ? 0 : v / 255, gamma);
+    v = 128 + (v - 128) * conF;
     rL[i] = v+3>255?255:v+3<0?0:(v+3)|0;
     gL[i] = v+1>255?255:v+1<0?0:(v+1)|0;
     bL[i] = v-3>255?255:v-3<0?0:(v-3)|0;
