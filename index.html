@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Style Editor</title>
+  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family:'Segoe UI',sans-serif; background:#0c0c18; color:#e0e0e0; min-height:100vh; }
@@ -116,7 +117,7 @@
       <div class="upload-zone" id="uploadZone">
         <div class="icon">📁</div>
         <p>Click or drag & drop<br>your image here</p>
-        <input type="file" id="fileInput" accept="image/*" />
+        <input type="file" id="fileInput" accept="image/*,.heic,.heif" />
       </div>
     </div>
 
@@ -283,10 +284,24 @@ document.addEventListener('drop', e => {
   e.preventDefault();
   document.getElementById('uploadZone').classList.remove('drag-over');
   const f = e.dataTransfer.files[0];
-  if (f && f.type.startsWith('image/')) loadFile(f);
+  if (!f) return;
+  const name = f.name.toLowerCase();
+  const ok = f.type.startsWith('image/') || name.endsWith('.heic') || name.endsWith('.heif');
+  if (ok) loadFile(f);
 });
 
 function loadFile(file) {
+  const isHeic = file.type === 'image/heic' || file.type === 'image/heif'
+    || file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif');
+
+  if (isHeic) {
+    toast('Converting HEIC…');
+    heic2any({ blob: file, toType: 'image/jpeg', quality: 0.97 })
+      .then(blob => loadFile(blob))
+      .catch(() => toast('Could not read HEIC file. Try converting it first.'));
+    return;
+  }
+
   const reader = new FileReader();
   reader.onload = ev => {
     const img = new Image();
