@@ -228,22 +228,14 @@ const gLUT = new Uint8Array(256);
 const bLUT = new Uint8Array(256);
 
 (function buildLUTs() {
-  // Apple Photos -30 exposure ≈ 0.82x (not 0.70 — that was too dark)
-  const expF  = 0.82;
-  // Brilliance -60: Apple Photos compresses highlights & lifts shadows slightly
-  // (matte/flat look). Do NOT pull toward gray — that causes foggy haze.
-  // Implemented as a gentle tone-curve compression: shrink distance from 128 by 18%.
-  const brillComp = 0.18;
-  // Brightness -45 ≈ gamma 1.28 (not 1.45 — that was too dark)
-  const gamma = 1.28;
-  // Contrast -10: pull 10% toward 128
-  const conF  = 0.90;
-
+  // Exposure -30 ≈ 0.80x linear (about -0.32 EV)
+  // Brightness -45 ≈ gamma 1.22 (darkens midtones without crushing blacks)
+  // Contrast -10 ≈ pull 10% toward middle
+  // Brilliance is handled PER-PIXEL as saturation reduction (not in LUT)
   for (let i = 0; i < 256; i++) {
-    let v = i * expF;
-    v = 128 + (v - 128) * (1 - brillComp);   // compress range gently
-    v = 255 * Math.pow(v < 0 ? 0 : v / 255, gamma);
-    v = 128 + (v - 128) * conF;
+    let v = i * 0.80;
+    v = 255 * Math.pow(v / 255, 1.22);
+    v = 128 + (v - 128) * 0.90;
     rLUT[i] = v + 3 > 255 ? 255 : v + 3 < 0 ? 0 : (v + 3) | 0;
     gLUT[i] = v + 1 > 255 ? 255 : v + 1 < 0 ? 0 : (v + 1) | 0;
     bLUT[i] = v - 3 > 255 ? 255 : v - 3 < 0 ? 0 : (v - 3) | 0;
@@ -378,33 +370,39 @@ function fitCanvas() {
 // ─────────────────────────────────────────────────────────────
 function applyStyleFast(id) {
   const d = id.data;
-  const vib = MY_STYLE.vibrance / 100;          // -0.45
-  const hlBoost = MY_STYLE.highlights / 100 * 0.08; // 0.008
 
   for (let i = 0; i < d.length; i += 4) {
     let r = rLUT[d[i]], g = gLUT[d[i+1]], b = bLUT[d[i+2]];
 
-    // Highlights: lift bright pixels slightly
     const luma = (r * 77 + g * 150 + b * 29) >> 8;
+
+    // Brilliance -60 → reduce saturation by ~22% (muted/flat look, no gray haze)
+    r = (luma + (r - luma) * 0.78) | 0;
+    g = (luma + (g - luma) * 0.78) | 0;
+    b = (luma + (b - luma) * 0.78) | 0;
+
+    // Highlights +10 → gently lift bright areas
     if (luma > 170) {
-      const t = (luma - 170) / 85 * hlBoost;
+      const t = (luma - 170) / 85 * 0.06;
       r = (r + (255 - r) * t) | 0;
       g = (g + (255 - g) * t) | 0;
       b = (b + (255 - b) * t) | 0;
     }
 
-    // Vibrance: desaturate vivid colors
+    // Vibrance -45 → selectively desaturate vivid colors further
     const maxC = r > g ? (r > b ? r : b) : (g > b ? g : b);
     const minC = r < g ? (r < b ? r : b) : (g < b ? g : b);
     const sat  = maxC > 0 ? (maxC - minC) / maxC : 0;
-    if (sat > 0.04) {
-      const blend = sat * (-vib); // positive blend amount
+    if (sat > 0.08) {
+      const blend = sat * 0.30;
       r = (r + (luma - r) * blend) | 0;
       g = (g + (luma - g) * blend) | 0;
       b = (b + (luma - b) * blend) | 0;
     }
 
-    d[i] = r; d[i+1] = g; d[i+2] = b;
+    d[i] = r < 0 ? 0 : r > 255 ? 255 : r;
+    d[i+1] = g < 0 ? 0 : g > 255 ? 255 : g;
+    d[i+2] = b < 0 ? 0 : b > 255 ? 255 : b;
   }
 }
 
@@ -614,36 +612,32 @@ self.onmessage = function(e) {
 
   // Build LUTs inside worker
   const rL = new Uint8Array(256), gL = new Uint8Array(256), bL = new Uint8Array(256);
-  const expF      = 0.82;
-  const brillComp = 0.18;
-  const gamma     = 1.28;
-  const conF      = 0.90;
   for (let i = 0; i < 256; i++) {
-    let v = i * expF;
-    v = 128 + (v - 128) * (1 - brillComp);
-    v = 255 * Math.pow(v < 0 ? 0 : v / 255, gamma);
-    v = 128 + (v - 128) * conF;
+    let v = i * 0.80;
+    v = 255 * Math.pow(v / 255, 1.22);
+    v = 128 + (v - 128) * 0.90;
     rL[i] = v+3>255?255:v+3<0?0:(v+3)|0;
     gL[i] = v+1>255?255:v+1<0?0:(v+1)|0;
     bL[i] = v-3>255?255:v-3<0?0:(v-3)|0;
   }
 
-  const hlBoost = style.highlights / 100 * 0.08;
-  const vibNeg  = -style.vibrance / 100;
-
-  // Pass 1: LUT + highlights + vibrance
+  // Pass 1: LUT + brilliance (sat reduction) + highlights + vibrance
   for (let i = 0; i < d.length; i += 4) {
     let r = rL[d[i]], g = gL[d[i+1]], b = bL[d[i+2]];
     const luma = (r*77 + g*150 + b*29) >> 8;
+    // Brilliance -60 as saturation reduction
+    r=(luma+(r-luma)*0.78)|0; g=(luma+(g-luma)*0.78)|0; b=(luma+(b-luma)*0.78)|0;
+    // Highlights +10
     if (luma > 170) {
-      const t = (luma-170)/85*hlBoost;
+      const t=(luma-170)/85*0.06;
       r=(r+(255-r)*t)|0; g=(g+(255-g)*t)|0; b=(b+(255-b)*t)|0;
     }
+    // Vibrance -45
     const maxC=r>g?(r>b?r:b):(g>b?g:b);
     const minC=r<g?(r<b?r:b):(g<b?g:b);
     const sat=(maxC>0?(maxC-minC)/maxC:0);
-    if (sat>0.04) {
-      const blend=sat*vibNeg;
+    if (sat>0.08) {
+      const blend=sat*0.30;
       r=(r+(luma-r)*blend)|0; g=(g+(luma-g)*blend)|0; b=(b+(luma-b)*blend)|0;
     }
     d[i]=r<0?0:r>255?255:r; d[i+1]=g<0?0:g>255?255:g; d[i+2]=b<0?0:b>255?255:b;
