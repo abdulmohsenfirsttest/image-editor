@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Style Editor</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0c0c18;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #12122a;
+      padding: 16px 28px;
+      border-bottom: 1px solid #2a2a4a;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 {
+      font-size: 1.3rem;
+      background: linear-gradient(90deg, #a78bfa, #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+    }
+    .style-badge {
+      font-size: .72rem;
+      background: #2a1f5a;
+      border: 1px solid #a78bfa55;
+      color: #a78bfa;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    .app { display: flex; height: calc(100vh - 57px); }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 270px;
+      min-width: 270px;
+      background: #12122a;
+      border-right: 1px solid #2a2a4a;
+      overflow-y: auto;
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .section-title {
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #6060a0;
+      margin-bottom: 10px;
+    }
+
+    /* upload */
+    .upload-zone {
+      border: 2px dashed #3a3a6a;
+      border-radius: 12px;
+      padding: 22px 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: .2s;
+      background: #1a1a3a;
+    }
+    .upload-zone:hover, .upload-zone.drag-over {
+      border-color: #a78bfa;
+      background: #1f1f45;
+    }
+    .upload-zone .icon { font-size: 1.8rem; }
+    .upload-zone p { font-size: .8rem; color: #8080b0; margin-top: 6px; line-height: 1.5; }
+    #fileInput { display: none; }
+
+    /* my style card */
+    .style-card {
+      background: linear-gradient(135deg, #1a1a3a, #1e1430);
+      border: 1px solid #a78bfa33;
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .style-card-title {
+      font-size: .78rem;
+      color: #a78bfa;
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .style-params {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .param-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .param-name { font-size: .67rem; color: #7070a0; }
+    .param-val {
+      font-size: .82rem;
+      font-weight: 700;
+      color: #c0b0ff;
+    }
+    .param-val.neg { color: #f472b6; }
+    .param-val.pos { color: #34d399; }
+
+    /* reset button */
+    .apply-btn {
+      width: 100%;
+      padding: 10px;
+      border-radius: 9px;
+      border: 1px solid #a78bfa55;
+      background: #2a1f5a;
+      color: #a78bfa;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .2s;
+      margin-top: 8px;
+    }
+    .apply-btn:hover { background: #3a2a7a; }
+
+    /* transform */
+    .btn-row { display: flex; gap: 8px; margin-bottom: 8px; }
+    .btn {
+      flex: 1;
+      padding: 9px 6px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: .78rem;
+      font-weight: 600;
+      transition: .2s;
+      text-align: center;
+    }
+    .btn-secondary { background: #1e1e3a; color: #c0c0e0; border: 1px solid #2a2a4a; }
+    .btn-secondary:hover { background: #2a2a4a; }
+    .btn-primary { background: linear-gradient(135deg, #a78bfa, #60a5fa); color: #fff; }
+    .btn-primary:hover { opacity: .85; }
+    .btn-danger { background: #2a1020; color: #f87171; border: 1px solid #3a1030; }
+    .btn-danger:hover { background: #3a1a30; }
+
+    /* fine-tune sliders */
+    .slider-group { display: flex; flex-direction: column; gap: 11px; }
+    .slider-row { display: flex; flex-direction: column; gap: 4px; }
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: .77rem;
+      color: #a0a0c0;
+    }
+    .slider-label span { color: #a78bfa; font-weight: 600; font-size: .75rem; }
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 3px;
+      border-radius: 3px;
+      background: #2a2a4a;
+      outline: none;
+      cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: #a78bfa;
+      cursor: pointer;
+      box-shadow: 0 0 5px #a78bfa77;
+    }
+
+    /* download */
+    .download-btn {
+      width: 100%;
+      padding: 13px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      font-size: .92rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s;
+      margin-top: auto;
+    }
+    .download-btn:hover { opacity: .85; transform: translateY(-1px); }
+    .download-btn:disabled { opacity: .35; cursor: not-allowed; transform: none; }
+
+    /* ── Canvas area ── */
+    .canvas-area {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #080814;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .placeholder {
+      text-align: center;
+      color: #3a3a5a;
+      user-select: none;
+    }
+    .placeholder .big-icon { font-size: 4.5rem; margin-bottom: 14px; }
+    .placeholder p { font-size: .95rem; }
+    .placeholder small { font-size: .78rem; color: #2a2a4a; margin-top: 6px; display: block; }
+
+    #canvasWrapper {
+      position: relative;
+      display: none;
+      box-shadow: 0 8px 60px #00000099;
+    }
+    #mainCanvas { display: block; border-radius: 3px; max-width: 100%; max-height: calc(100vh - 120px); }
+
+    /* crop overlay */
+    #cropOverlay {
+      position: absolute;
+      border: 2px solid #a78bfa;
+      box-shadow: 0 0 0 9999px rgba(0,0,0,.6);
+      cursor: move;
+      display: none;
+    }
+    .crop-handle {
+      position: absolute;
+      width: 10px; height: 10px;
+      background: #a78bfa;
+      border-radius: 2px;
+    }
+    .crop-handle.tl { top:-5px; left:-5px; cursor: nw-resize; }
+    .crop-handle.tr { top:-5px; right:-5px; cursor: ne-resize; }
+    .crop-handle.bl { bottom:-5px; left:-5px; cursor: sw-resize; }
+    .crop-handle.br { bottom:-5px; right:-5px; cursor: se-resize; }
+
+    /* auto-applied badge */
+    #statusBar {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1a1a3a;
+      border: 1px solid #a78bfa44;
+      color: #a78bfa;
+      font-size: .75rem;
+      padding: 5px 14px;
+      border-radius: 20px;
+      display: none;
+      white-space: nowrap;
+    }
+
+    /* toast */
+    #toast {
+      position: fixed;
+      bottom: 22px; right: 22px;
+      background: #1e1e3a;
+      border: 1px solid #a78bfa;
+      color: #e0e0ff;
+      padding: 11px 18px;
+      border-radius: 10px;
+      font-size: .82rem;
+      opacity: 0;
+      transition: opacity .3s;
+      pointer-events: none;
+      z-index: 999;
+    }
+    #toast.show { opacity: 1; }
+
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: #3a3a5a; border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>My Style Editor</h1>
+  <div class="style-badge">Auto-applies your preset</div>
+</header>
+
+<div class="app">
+  <!-- ══ SIDEBAR ══ -->
+  <div class="sidebar">
+
+    <!-- Upload -->
+    <div>
+      <div class="section-title">Upload Image</div>
+      <div class="upload-zone" id="uploadZone">
+        <div class="icon">📁</div>
+        <p>Click or drag & drop<br>your image here</p>
+        <input type="file" id="fileInput" accept="image/*" />
+      </div>
+    </div>
+
+    <!-- My Style preset card -->
+    <div>
+      <div class="section-title">Your Style Preset</div>
+      <div class="style-card">
+        <div class="style-card-title">Applied automatically on upload</div>
+        <div class="style-params">
+          <div class="param-item"><div class="param-name">Exposure</div><div class="param-val neg">-30</div></div>
+          <div class="param-item"><div class="param-name">Brilliance</div><div class="param-val neg">-60</div></div>
+          <div class="param-item"><div class="param-name">Highlights</div><div class="param-val pos">+10</div></div>
+          <div class="param-item"><div class="param-name">Contrast</div><div class="param-val neg">-10</div></div>
+          <div class="param-item"><div class="param-name">Brightness</div><div class="param-val neg">-45</div></div>
+          <div class="param-item"><div class="param-name">Vibrance</div><div class="param-val neg">-45</div></div>
+          <div class="param-item"><div class="param-name">Warmth</div><div class="param-val pos">+10</div></div>
+          <div class="param-item"><div class="param-name">Sharpness</div><div class="param-val pos">+20</div></div>
+        </div>
+        <button class="apply-btn" id="reapplyBtn">Re-apply My Style</button>
+      </div>
+    </div>
+
+    <!-- Fine-tune -->
+    <div>
+      <div class="section-title">Fine-tune</div>
+      <div class="slider-group">
+        <div class="slider-row">
+          <div class="slider-label">Brightness <span id="brightnessVal">0</span></div>
+          <input type="range" id="brightness" min="-100" max="100" value="0" />
+        </div>
+        <div class="slider-row">
+          <div class="slider-label">Contrast <span id="contrastVal">0</span></div>
+          <input type="range" id="contrast" min="-100" max="100" value="0" />
+        </div>
+        <div class="slider-row">
+          <div class="slider-label">Saturation <span id="saturationVal">0</span></div>
+          <input type="range" id="saturation" min="-100" max="100" value="0" />
+        </div>
+        <div class="slider-row">
+          <div class="slider-label">Blur <span id="blurVal">0</span>px</div>
+          <input type="range" id="blur" min="0" max="20" value="0" />
+        </div>
+        <div class="slider-row">
+          <div class="slider-label">Hue Rotate <span id="hueVal">0</span>°</div>
+          <input type="range" id="hue" min="0" max="360" value="0" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Transform -->
+    <div>
+      <div class="section-title">Transform</div>
+      <div class="btn-row">
+        <button class="btn btn-secondary" id="rotateLeft">↺ Left</button>
+        <button class="btn btn-secondary" id="rotateRight">↻ Right</button>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-secondary" id="flipH">↔ Flip H</button>
+        <button class="btn btn-secondary" id="flipV">↕ Flip V</button>
+      </div>
+      <button class="btn btn-primary" id="cropStart" style="width:100%;">✂ Crop</button>
+      <div id="cropActions" style="display:none;" class="btn-row">
+        <button class="btn btn-primary" id="cropApply">Apply Crop</button>
+        <button class="btn btn-danger" id="cropCancel">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Download -->
+    <div style="margin-top:auto;">
+      <button class="download-btn" id="downloadBtn" disabled>⬇ Download Edited Image</button>
+    </div>
+
+  </div>
+
+  <!-- ══ CANVAS AREA ══ -->
+  <div class="canvas-area" id="canvasArea">
+    <div class="placeholder" id="placeholder">
+      <div class="big-icon">🖼️</div>
+      <p>Upload an image to apply your style</p>
+      <small>Your preset will be applied automatically</small>
+    </div>
+    <div id="canvasWrapper">
+      <canvas id="mainCanvas"></canvas>
+      <div id="cropOverlay">
+        <div class="crop-handle tl"></div>
+        <div class="crop-handle tr"></div>
+        <div class="crop-handle bl"></div>
+        <div class="crop-handle br"></div>
+      </div>
+    </div>
+    <div id="statusBar">Your style applied automatically</div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── Your exact style settings ──────────────────────────────────
+const MY_STYLE = {
+  exposure:   -30,
+  brilliance: -60,
+  highlights: +10,
+  contrast:   -10,
+  brightness: -45,
+  vibrance:   -45,
+  warmth:     +10,
+  sharpness:  +20,
+};
+
+// ── State ──────────────────────────────────────────────────────
+const state = {
+  source: null,     // raw loaded ImageData (never modified)
+  styled: null,     // after your style applied
+  rotation: 0,
+  flipH: false,
+  flipV: false,
+  brightness: 0, contrast: 0, saturation: 0, blur: 0, hue: 0,
+  cropping: false,
+  crop: null,
+};
+
+// ── Elements ───────────────────────────────────────────────────
+const canvas  = document.getElementById('mainCanvas');
+const ctx     = canvas.getContext('2d', { willReadFrequently: true });
+const wrapper = document.getElementById('canvasWrapper');
+const overlay = document.getElementById('cropOverlay');
+const ph      = document.getElementById('placeholder');
+const status  = document.getElementById('statusBar');
+
+// ── Upload ─────────────────────────────────────────────────────
+document.getElementById('uploadZone').addEventListener('click', () =>
+  document.getElementById('fileInput').click());
+
+document.getElementById('fileInput').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (file) loadFile(file);
+});
+
+['dragover','dragenter'].forEach(ev =>
+  document.getElementById('uploadZone').addEventListener(ev, e => {
+    e.preventDefault();
+    e.currentTarget.classList.add('drag-over');
+  })
+);
+['dragleave','drop'].forEach(ev =>
+  document.getElementById('uploadZone').addEventListener(ev, e => {
+    e.preventDefault();
+    e.currentTarget.classList.remove('drag-over');
+  })
+);
+document.getElementById('uploadZone').addEventListener('drop', e => {
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) loadFile(file);
+});
+
+function loadFile(file) {
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      const area = document.getElementById('canvasArea');
+      const maxW = area.clientWidth  - 40;
+      const maxH = area.clientHeight - 40;
+      let w = img.width, h = img.height;
+      const scale = Math.min(maxW / w, maxH / h, 1);
+      w = Math.round(w * scale);
+      h = Math.round(h * scale);
+
+      // draw original into offscreen to get ImageData
+      const tmp = document.createElement('canvas');
+      tmp.width = w; tmp.height = h;
+      tmp.getContext('2d').drawImage(img, 0, 0, w, h);
+      state.source   = tmp.getContext('2d').getImageData(0, 0, w, h);
+      state.rotation = 0; state.flipH = false; state.flipV = false;
+      resetSliders();
+
+      ph.style.display     = 'none';
+      wrapper.style.display = 'block';
+      document.getElementById('downloadBtn').disabled = false;
+
+      applyMyStyleAndRender();
+      toast('Style applied automatically!');
+      status.style.display = 'block';
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── Apply YOUR style to pixel data ────────────────────────────
+function applyMyStyle(imageData) {
+  const d = imageData.data;
+  const w = imageData.width;
+  const h = imageData.height;
+
+  // --- per-pixel adjustments ---
+  for (let i = 0; i < d.length; i += 4) {
+    let r = d[i], g = d[i+1], b = d[i+2];
+
+    // 1. Exposure -30  (multiply, like reducing EV)
+    const expFactor = 1 + MY_STYLE.exposure / 100;   // 0.70
+    r *= expFactor; g *= expFactor; b *= expFactor;
+
+    // 2. Brilliance -60  (pull toward midgray → flatter/muted)
+    const brillAmount = -MY_STYLE.brilliance / 100;  // 0.60
+    r = r + (128 - r) * brillAmount;
+    g = g + (128 - g) * brillAmount;
+    b = b + (128 - b) * brillAmount;
+
+    // 3. Brightness -45  (gamma darkening of midtones)
+    const gamma = 1 + (-MY_STYLE.brightness) / 100;  // 1.45
+    r = 255 * Math.pow(Math.max(r,0)/255, gamma);
+    g = 255 * Math.pow(Math.max(g,0)/255, gamma);
+    b = 255 * Math.pow(Math.max(b,0)/255, gamma);
+
+    // 4. Contrast -10  (pull toward 128)
+    const conFactor = 1 + MY_STYLE.contrast / 100;   // 0.90
+    r = 128 + (r - 128) * conFactor;
+    g = 128 + (g - 128) * conFactor;
+    b = 128 + (b - 128) * conFactor;
+
+    // 5. Highlights +10  (lift bright areas slightly)
+    const luma = 0.299*r + 0.587*g + 0.114*b;
+    if (luma > 170) {
+      const t = (luma - 170) / 85;
+      const boost = t * (MY_STYLE.highlights / 100) * 0.6;
+      r = r + (255 - r) * boost;
+      g = g + (255 - g) * boost;
+      b = b + (255 - b) * boost;
+    }
+
+    // 6. Vibrance -45  (desaturate more-saturated pixels more)
+    const maxC = Math.max(r, g, b);
+    const minC = Math.min(r, g, b);
+    const sat  = maxC > 0 ? (maxC - minC) / maxC : 0;
+    const gray = 0.299*r + 0.587*g + 0.114*b;
+    const vibAmount = sat * (-MY_STYLE.vibrance / 100); // 0.45 × sat
+    r = r + (gray - r) * vibAmount;
+    g = g + (gray - g) * vibAmount;
+    b = b + (gray - b) * vibAmount;
+
+    // 7. Warmth +10  (add warm cast: red up, green tiny up, blue down)
+    const wScale = MY_STYLE.warmth / 100;
+    r = r + 18 * wScale;
+    g = g + 5  * wScale;
+    b = b - 18 * wScale;
+
+    d[i]   = clamp(r);
+    d[i+1] = clamp(g);
+    d[i+2] = clamp(b);
+  }
+
+  // 8. Sharpness +20  (unsharp mask convolution)
+  const amount = MY_STYLE.sharpness / 100;  // 0.20
+  applySharpen(imageData, amount);
+}
+
+function clamp(v) { return Math.min(255, Math.max(0, Math.round(v))); }
+
+function applySharpen(imageData, amount) {
+  const w = imageData.width, h = imageData.height;
+  const src = new Uint8ClampedArray(imageData.data);
+  const d   = imageData.data;
+  // laplacian sharpen kernel scaled by amount
+  const k = [0,-amount,0, -amount,1+4*amount,-amount, 0,-amount,0];
+  for (let y = 1; y < h-1; y++) {
+    for (let x = 1; x < w-1; x++) {
+      const idx = (y*w+x)*4;
+      for (let c = 0; c < 3; c++) {
+        let v = 0;
+        for (let ky = -1; ky <= 1; ky++)
+          for (let kx = -1; kx <= 1; kx++)
+            v += src[((y+ky)*w+(x+kx))*4+c] * k[(ky+1)*3+(kx+1)];
+        d[idx+c] = clamp(v);
+      }
+    }
+  }
+}
+
+// ── Main render pipeline ───────────────────────────────────────
+function applyMyStyleAndRender() {
+  if (!state.source) return;
+
+  // copy source to a temp canvas
+  const tmp = document.createElement('canvas');
+  tmp.width  = state.source.width;
+  tmp.height = state.source.height;
+  const tc = tmp.getContext('2d', { willReadFrequently: true });
+  tc.putImageData(state.source, 0, 0);
+
+  // pixel-level style
+  const id = tc.getImageData(0, 0, tmp.width, tmp.height);
+  applyMyStyle(id);
+  tc.putImageData(id, 0, 0);
+  state.styled = tc.getImageData(0, 0, tmp.width, tmp.height);
+
+  render();
+}
+
+function render() {
+  if (!state.styled) return;
+
+  const src = document.createElement('canvas');
+  src.width  = state.styled.width;
+  src.height = state.styled.height;
+  src.getContext('2d').putImageData(state.styled, 0, 0);
+
+  // CSS fine-tune filters on top
+  const brightness = 100 + state.brightness;
+  const contrast   = 100 + state.contrast;
+  const saturation = 100 + state.saturation;
+  const cssFilter  = [
+    `brightness(${brightness}%)`,
+    `contrast(${contrast}%)`,
+    `saturate(${saturation}%)`,
+    `blur(${state.blur}px)`,
+    `hue-rotate(${state.hue}deg)`,
+  ].join(' ');
+
+  canvas.width  = src.width;
+  canvas.height = src.height;
+  ctx.filter = cssFilter;
+  ctx.drawImage(src, 0, 0);
+  ctx.filter = 'none';
+}
+
+// ── Sliders (fine-tune on top of your style) ───────────────────
+const sliderIds = ['brightness','contrast','saturation','blur','hue'];
+sliderIds.forEach(id => {
+  document.getElementById(id).addEventListener('input', function() {
+    state[id] = +this.value;
+    document.getElementById(id + 'Val').textContent = this.value;
+    render();
+  });
+});
+
+function resetSliders() {
+  sliderIds.forEach(id => {
+    const el = document.getElementById(id);
+    el.value = 0;
+    state[id] = 0;
+    document.getElementById(id + 'Val').textContent = 0;
+  });
+}
+
+// ── Re-apply button ────────────────────────────────────────────
+document.getElementById('reapplyBtn').addEventListener('click', () => {
+  if (!state.source) return;
+  resetSliders();
+  applyMyStyleAndRender();
+  toast('Style re-applied!');
+});
+
+// ── Transform ─────────────────────────────────────────────────
+document.getElementById('rotateLeft').addEventListener('click',  () => { rotateSource(-90); });
+document.getElementById('rotateRight').addEventListener('click', () => { rotateSource(+90); });
+document.getElementById('flipH').addEventListener('click', () => { flipSource('h'); });
+document.getElementById('flipV').addEventListener('click', () => { flipSource('v'); });
+
+function rotateSource(deg) {
+  if (!state.source) return;
+  const orig = state.source;
+  const rotated = true; // 90 or -90 → swap w/h
+  const newW = orig.height, newH = orig.width;
+  const tmp = document.createElement('canvas');
+  tmp.width = newW; tmp.height = newH;
+  const tc = tmp.getContext('2d');
+  tc.translate(newW/2, newH/2);
+  tc.rotate(deg * Math.PI / 180);
+  const src = document.createElement('canvas');
+  src.width = orig.width; src.height = orig.height;
+  src.getContext('2d').putImageData(orig, 0, 0);
+  tc.drawImage(src, -orig.width/2, -orig.height/2);
+  state.source = tmp.getContext('2d').getImageData(0,0,newW,newH);
+  applyMyStyleAndRender();
+}
+
+function flipSource(axis) {
+  if (!state.source) return;
+  const orig = state.source;
+  const tmp = document.createElement('canvas');
+  tmp.width = orig.width; tmp.height = orig.height;
+  const tc = tmp.getContext('2d');
+  tc.translate(axis==='h' ? orig.width : 0, axis==='v' ? orig.height : 0);
+  tc.scale(axis==='h' ? -1 : 1, axis==='v' ? -1 : 1);
+  const src = document.createElement('canvas');
+  src.width = orig.width; src.height = orig.height;
+  src.getContext('2d').putImageData(orig, 0, 0);
+  tc.drawImage(src, 0, 0);
+  state.source = tmp.getContext('2d').getImageData(0,0,orig.width,orig.height);
+  applyMyStyleAndRender();
+}
+
+// ── Crop ───────────────────────────────────────────────────────
+let cropDrag = { active:false, mode:'move', sx:0, sy:0, ox:0, oy:0, ow:0, oh:0 };
+
+document.getElementById('cropStart').addEventListener('click', () => {
+  if (!state.source) return;
+  state.cropping = true;
+  state.crop = { x:20, y:20, w:canvas.width-40, h:canvas.height-40 };
+  showCropOverlay();
+  document.getElementById('cropActions').style.display = 'flex';
+  document.getElementById('cropStart').style.display = 'none';
+});
+
+document.getElementById('cropApply').addEventListener('click', () => {
+  const c = state.crop;
+  const tmp = document.createElement('canvas');
+  tmp.width = c.w; tmp.height = c.h;
+  const tc = tmp.getContext('2d');
+  const src = document.createElement('canvas');
+  src.width = state.source.width; src.height = state.source.height;
+  src.getContext('2d').putImageData(state.source, 0, 0);
+  tc.drawImage(src, c.x, c.y, c.w, c.h, 0, 0, c.w, c.h);
+  state.source = tc.getImageData(0, 0, c.w, c.h);
+  cancelCrop();
+  applyMyStyleAndRender();
+  toast('Crop applied!');
+});
+
+document.getElementById('cropCancel').addEventListener('click', cancelCrop);
+
+function showCropOverlay() {
+  const c = state.crop;
+  Object.assign(overlay.style, {
+    display:'block', left:c.x+'px', top:c.y+'px', width:c.w+'px', height:c.h+'px'
+  });
+}
+
+overlay.addEventListener('mousedown', e => {
+  if (!state.cropping) return;
+  const handle = e.target.classList.contains('crop-handle');
+  cropDrag.active = true;
+  cropDrag.mode   = handle ? e.target.className.replace('crop-handle ','') : 'move';
+  cropDrag.sx=e.clientX; cropDrag.sy=e.clientY;
+  cropDrag.ox=state.crop.x; cropDrag.oy=state.crop.y;
+  cropDrag.ow=state.crop.w; cropDrag.oh=state.crop.h;
+  e.preventDefault();
+});
+document.addEventListener('mousemove', e => {
+  if (!cropDrag.active) return;
+  const dx = e.clientX-cropDrag.sx, dy = e.clientY-cropDrag.sy;
+  const c = state.crop, MIN = 20;
+  if (cropDrag.mode==='move') {
+    c.x = Math.max(0, Math.min(canvas.width -c.w, cropDrag.ox+dx));
+    c.y = Math.max(0, Math.min(canvas.height-c.h, cropDrag.oy+dy));
+  } else {
+    if (cropDrag.mode.includes('r')) c.w = Math.max(MIN, Math.min(canvas.width -c.x, cropDrag.ow+dx));
+    if (cropDrag.mode.includes('l')) { c.x=Math.min(cropDrag.ox+cropDrag.ow-MIN,cropDrag.ox+dx); c.w=cropDrag.ow-(c.x-cropDrag.ox); }
+    if (cropDrag.mode.includes('b')) c.h = Math.max(MIN, Math.min(canvas.height-c.y, cropDrag.oh+dy));
+    if (cropDrag.mode.includes('t')) { c.y=Math.min(cropDrag.oy+cropDrag.oh-MIN,cropDrag.oy+dy); c.h=cropDrag.oh-(c.y-cropDrag.oy); }
+  }
+  showCropOverlay();
+});
+document.addEventListener('mouseup', () => { cropDrag.active = false; });
+
+function cancelCrop() {
+  state.cropping = false;
+  overlay.style.display = 'none';
+  document.getElementById('cropActions').style.display = 'none';
+  document.getElementById('cropStart').style.display = '';
+}
+
+// ── Download ───────────────────────────────────────────────────
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  const link = document.createElement('a');
+  link.download = 'my-style.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  toast('Image downloaded!');
+});
+
+// ── Toast ──────────────────────────────────────────────────────
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
