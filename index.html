@@ -291,14 +291,22 @@ document.addEventListener('drop', e => {
 });
 
 function loadFile(file) {
+  const name = file.name || '';
   const isHeic = file.type === 'image/heic' || file.type === 'image/heif'
-    || file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif');
+    || name.toLowerCase().endsWith('.heic') || name.toLowerCase().endsWith('.heif');
 
   if (isHeic) {
+    if (typeof heic2any === 'undefined') {
+      toast('HEIC needs internet to convert. Open the GitHub link instead of the local file.');
+      return;
+    }
     toast('Converting HEIC…');
     heic2any({ blob: file, toType: 'image/jpeg', quality: 0.97 })
-      .then(blob => loadFile(blob))
-      .catch(() => toast('Could not read HEIC file. Try converting it first.'));
+      .then(blob => loadFile(new File([blob], 'photo.jpg', { type: 'image/jpeg' })))
+      .catch(err => {
+        console.error('heic2any error:', err);
+        toast('HEIC conversion failed. Try sharing the photo as JPEG from iPhone Photos app.');
+      });
     return;
   }
 
